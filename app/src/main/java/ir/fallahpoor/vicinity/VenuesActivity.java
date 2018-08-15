@@ -25,7 +25,9 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     @NonNull
     @Override
     public VenuesPresenter createPresenter() {
-        return new VenuesPresenterImpl();
+        VenuesRepository venuesRepository = new VenuesRepositoryImpl(new WebServiceFactory(), new VenuesEntityDataMapper());
+        GetVenuesUseCase getVenuesUseCase = new GetVenuesUseCase(venuesRepository, new JobExecutor(), new UiThread());
+        return new VenuesPresenterImpl(getVenuesUseCase, new VenuesDataMapper());
     }
 
     @Override
