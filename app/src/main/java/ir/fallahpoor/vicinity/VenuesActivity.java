@@ -1,14 +1,22 @@
 package ir.fallahpoor.vicinity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.NonNull;
 
-public class VenuesActivity extends AppCompatActivity {
+import com.hannesdorfmann.mosby3.mvp.MvpActivity;
+
+public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> implements VenuesView {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues);
+    }
+
+    @NonNull
+    @Override
+    public VenuesPresenter createPresenter() {
+        return new VenuesPresenterImpl();
     }
 
 }
