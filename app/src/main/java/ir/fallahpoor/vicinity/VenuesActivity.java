@@ -32,6 +32,8 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
         bindViews();
 
+        getPresenter().getVenuesAround(35.734410, 51.394560);
+
     }
 
     private void bindViews() {
