@@ -27,7 +27,7 @@ public class VenuesEntityDataMapper {
 
     }
 
-    private Venue transformVenue(VenueEntity venueEntity) {
+    public Venue transformVenue(VenueEntity venueEntity) {
 
         Venue venue = new Venue();
 
