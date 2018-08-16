@@ -29,6 +29,11 @@ public class VenuesRepositoryImpl implements VenuesRepository {
                 .map(venuesEntityDataMapper::transform);
     }
 
+    @Override
+    public Single<Venue> getVenueDetails(String id) {
+        return null;
+    }
+
     private interface VenuesWebService {
         @GET("search")
         Single<VenuesEntity> getPlacesNear(@Query("ll") String latLng, @Query("client_id") String clientId,
