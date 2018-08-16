@@ -24,8 +24,8 @@ public class VenuesRepositoryImpl implements VenuesRepository {
     @Override
     public Single<List<Venue>> getVenuesAround(double latitude, double longitude) {
         String latLng = latitude + "," + longitude;
-        return venuesWebService.getPlacesNear(latLng, "US3XZKWYN5FQMT1X0HNZ5PKM2K3VYHL02ISBT4DGFVPYDU5N",
-                "PCEJJJNH3CR0VS0UVYEKCWI4N31KAQMX1V024BSVM34VQNXZ", "20180901")
+        return venuesWebService.getPlacesNear(latLng, "IJZDVIXBO10YGCTXHD0UV0QO2QUCW0L34J2DGUFQBGI2FV0X",
+                "RLRAMRXMPEI0K22XTWTNP3ZFJ2REXTVIOV45UCLLCRFBZ12A", "20180901")
                 .map(venuesEntityDataMapper::transform);
     }
 
