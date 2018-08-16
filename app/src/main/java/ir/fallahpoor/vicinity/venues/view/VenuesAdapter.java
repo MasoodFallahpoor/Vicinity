@@ -1,4 +1,4 @@
-package ir.fallahpoor.vicinity;
+package ir.fallahpoor.vicinity.venues.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
 public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenueViewHolder> {
 

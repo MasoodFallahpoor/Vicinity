@@ -1,4 +1,4 @@
-package ir.fallahpoor.vicinity;
+package ir.fallahpoor.vicinity.venues.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,12 +13,18 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.List;
 
+import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.UiThread;
 import ir.fallahpoor.vicinity.data.WebServiceFactory;
 import ir.fallahpoor.vicinity.data.executor.JobExecutor;
 import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
 import ir.fallahpoor.vicinity.data.repository.VenuesRepositoryImpl;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
 import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
+import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
+import ir.fallahpoor.vicinity.venues.model.VenuesDataMapper;
+import ir.fallahpoor.vicinity.venues.presenter.VenuesPresenter;
+import ir.fallahpoor.vicinity.venues.presenter.VenuesPresenterImpl;
 
 public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> implements VenuesView {
 

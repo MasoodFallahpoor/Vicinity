@@ -1,4 +1,4 @@
-package ir.fallahpoor.vicinity;
+package ir.fallahpoor.vicinity.venues.model;
 
 public class VenueViewModel {
 

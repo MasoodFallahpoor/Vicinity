@@ -1,4 +1,4 @@
-package ir.fallahpoor.vicinity;
+package ir.fallahpoor.vicinity.venues.model;
 
 import java.util.ArrayList;
 import java.util.Collections;

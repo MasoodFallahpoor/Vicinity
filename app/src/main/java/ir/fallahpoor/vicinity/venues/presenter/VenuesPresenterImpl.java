@@ -1,9 +1,11 @@
-package ir.fallahpoor.vicinity;
+package ir.fallahpoor.vicinity.venues.presenter;
 
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
 import io.reactivex.disposables.Disposable;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
+import ir.fallahpoor.vicinity.venues.model.VenuesDataMapper;
+import ir.fallahpoor.vicinity.venues.view.VenuesView;
 
 public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements VenuesPresenter {
 
