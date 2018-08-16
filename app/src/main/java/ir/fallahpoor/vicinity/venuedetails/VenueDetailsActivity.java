@@ -10,20 +10,12 @@ import android.widget.TextView;
 
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
+import javax.inject.Inject;
+
 import ir.fallahpoor.vicinity.R;
-import ir.fallahpoor.vicinity.UiThread;
-import ir.fallahpoor.vicinity.data.WebServiceFactory;
-import ir.fallahpoor.vicinity.data.executor.JobExecutor;
-import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
-import ir.fallahpoor.vicinity.data.repository.Database;
-import ir.fallahpoor.vicinity.data.repository.cache.VenuesCache;
-import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
-import ir.fallahpoor.vicinity.data.repository.VenuesRepositoryImpl;
-import ir.fallahpoor.vicinity.domain.interactors.GetVenueDetailsUseCase;
-import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
-import ir.fallahpoor.vicinity.venuedetails.model.VenueDetailsDataMapper;
+import ir.fallahpoor.vicinity.venuedetails.di.DaggerVenueDetailsComponent;
+import ir.fallahpoor.vicinity.venuedetails.di.VenueDetailsModule;
 import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenter;
-import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenterImpl;
 import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsView;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
@@ -31,6 +23,8 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
     public static final String KEY_VENUE_ID = "venue_id";
 
+    @Inject
+    VenueDetailsPresenter venueDetailsPresenter;
     private LinearLayout contentLayout;
     private RelativeLayout tryAgainLayout;
     private RelativeLayout loadingLayout;
@@ -40,6 +34,8 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        injectDependencies();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_details);
 
@@ -47,6 +43,13 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
         getPresenter().getVenueDetails(getVenueId());
 
+    }
+
+    private void injectDependencies() {
+        DaggerVenueDetailsComponent.builder()
+                .venueDetailsModule(new VenueDetailsModule(this))
+                .build()
+                .inject(this);
     }
 
     private void bindViews() {
@@ -65,11 +68,7 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
     @NonNull
     @Override
     public VenueDetailsPresenter createPresenter() {
-        VenuesDao venuesDao = Database.getDatabase(this).venuesDao();
-        VenuesCache venuesCache = new VenuesCache(venuesDao);
-        VenuesRepository venuesRepository = new VenuesRepositoryImpl(venuesCache, new WebServiceFactory(), new VenuesEntityDataMapper());
-        GetVenueDetailsUseCase getPlaceDetailsUseCase = new GetVenueDetailsUseCase(venuesRepository, new JobExecutor(), new UiThread());
-        return new VenueDetailsPresenterImpl(getPlaceDetailsUseCase, new VenueDetailsDataMapper());
+        return venueDetailsPresenter;
     }
 
     @Override
