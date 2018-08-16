@@ -2,6 +2,8 @@ package ir.fallahpoor.vicinity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
@@ -16,10 +18,22 @@ import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
 
 public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> implements VenuesView {
 
+    private RelativeLayout tryAgainLayout;
+    private RelativeLayout loadingLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues);
+
+        bindViews();
+
+    }
+
+    private void bindViews() {
+        tryAgainLayout = findViewById(R.id.try_again_layout);
+        loadingLayout = findViewById(R.id.loading_layout);
     }
 
     @NonNull
@@ -32,10 +46,13 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
     @Override
     public void showLoading() {
+        tryAgainLayout.setVisibility(View.GONE);
+        loadingLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
+        loadingLayout.setVisibility(View.GONE);
     }
 
     @Override
