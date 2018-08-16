@@ -9,6 +9,7 @@ import ir.fallahpoor.vicinity.R;
 import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenter;
 import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenterImpl;
 import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsView;
+import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
 public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDetailsPresenter> implements VenueDetailsView {
 
@@ -22,6 +23,22 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
     @Override
     public VenueDetailsPresenter createPresenter() {
         return new VenueDetailsPresenterImpl();
+    }
+
+    @Override
+    public void showLoading() {
+    }
+
+    @Override
+    public void hideLoading() {
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+    }
+
+    @Override
+    public void showPlace(VenueViewModel venue) {
     }
 
 }
