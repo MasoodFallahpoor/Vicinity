@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
@@ -23,6 +25,8 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     private RecyclerView venuesRecyclerView;
     private RelativeLayout tryAgainLayout;
     private RelativeLayout loadingLayout;
+    private TextView errorMessageTextView;
+    private Button tryAgainButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
         venuesRecyclerView = findViewById(R.id.venues_recycler_view);
         tryAgainLayout = findViewById(R.id.try_again_layout);
         loadingLayout = findViewById(R.id.loading_layout);
+        errorMessageTextView = findViewById(R.id.error_message_text_view);
+        tryAgainButton = findViewById(R.id.try_again_button);
     }
 
     @NonNull
@@ -63,6 +69,10 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
     @Override
     public void showError(String errorMessage) {
+        errorMessageTextView.setText(errorMessage);
+        tryAgainButton.setOnClickListener(view -> getPresenter().getVenuesAround(35.734410, 51.394560));
+        tryAgainLayout.setVisibility(View.VISIBLE);
+        venuesRecyclerView.setVisibility(View.GONE);
     }
 
     @Override
