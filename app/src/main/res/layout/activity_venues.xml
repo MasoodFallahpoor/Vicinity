@@ -14,8 +14,6 @@
         layout="@layout/try_again_layout"
         android:visibility="gone" />
 
-    <include
-        layout="@layout/loading_layout"
-        android:visibility="gone" />
+    <include layout="@layout/loading_layout" />
 
 </FrameLayout>

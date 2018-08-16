@@ -9,9 +9,12 @@ import ir.fallahpoor.vicinity.venues.view.VenuesView;
 
 public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements VenuesPresenter {
 
+    private static final int MAX_DISTANCE_TO_UPDATE_VENUES = 100;
     private GetVenuesUseCase getVenuesUseCase;
     private VenuesDataMapper venuesDataMapper;
     private Disposable disposable;
+    private double prevLatitude;
+    private double prevLongitude;
 
     public VenuesPresenterImpl(GetVenuesUseCase getVenuesUseCase, VenuesDataMapper venuesDataMapper) {
         this.getVenuesUseCase = getVenuesUseCase;
@@ -21,19 +24,47 @@ public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements
     @Override
     public void getVenuesAround(double latitude, double longitude) {
 
+        // If the distance between previous location and current one is less that
+        // a threshold then simply do nothing.
+        if (distanceInMeters(prevLatitude, prevLongitude, latitude, longitude) <= MAX_DISTANCE_TO_UPDATE_VENUES) {
+            return;
+        }
+
         ifViewAttached(VenuesView::showLoading);
 
         disposable = getVenuesUseCase.execute(GetVenuesUseCase.Params.forLocation(latitude, longitude))
                 .subscribe(
-                        venues -> ifViewAttached(view -> {
-                            view.hideLoading();
-                            view.showVenues(venuesDataMapper.transformVenues(venues));
-                        }),
+                        venues -> {
+                            prevLatitude = latitude;
+                            prevLongitude = longitude;
+                            ifViewAttached(view -> {
+                                view.hideLoading();
+                                view.showVenues(venuesDataMapper.transformVenues(venues));
+                            });
+                        },
                         throwable -> ifViewAttached(view -> {
                             view.hideLoading();
                             view.showError(throwable.getMessage());
                         })
                 );
+
+    }
+
+    private double distanceInMeters(double latitude1, double longitude1, double latitude2, double longitude2) {
+
+        final int radiusOfEarth = 6371;
+
+        double latDistance = Math.toRadians(latitude2 - latitude1);
+        double lonDistance = Math.toRadians(longitude2 - longitude1);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(latitude1)) * Math.cos(Math.toRadians(latitude2))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double distance = radiusOfEarth * c * 1000;
+
+        distance = Math.pow(distance, 2);
+
+        return Math.sqrt(distance);
 
     }
 

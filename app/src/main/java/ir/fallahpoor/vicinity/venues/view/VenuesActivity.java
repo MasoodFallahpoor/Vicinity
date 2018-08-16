@@ -2,11 +2,14 @@ package ir.fallahpoor.vicinity.venues.view;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -19,9 +22,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.Task;
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.List;
@@ -40,16 +54,21 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     @Inject
     VenuesPresenter venuesPresenter;
 
-    private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 1000;
     private static final String TAG = "@@@@@@";
+    private static final int REQUEST_CHECK_SETTINGS = 100;
+    private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 1000;
+    private static final long UPDATE_INTERVAL_IN_MS = 10000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MS = 5000;
 
     private RecyclerView venuesRecyclerView;
     private RelativeLayout tryAgainLayout;
     private RelativeLayout loadingLayout;
     private TextView errorMessageTextView;
     private Button tryAgainButton;
-    private FusedLocationProviderClient mFusedLocationClient;
+
+    private FusedLocationProviderClient fusedLocationClient;
     private Location lastLocation;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +80,9 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
         bindViews();
 
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        setupLocationCallback();
 
     }
 
@@ -80,13 +101,40 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
         tryAgainButton = findViewById(R.id.try_again_button);
     }
 
+    private void setupLocationCallback() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    Log.d(TAG, "Location: NULL");
+                } else {
+                    lastLocation = locationResult.getLastLocation();
+                    Log.d(TAG, "Location: " + lastLocation.getLongitude() + "," + lastLocation.getLongitude());
+                    getPresenter().getVenuesAround(lastLocation.getLatitude(), lastLocation.getLongitude());
+                }
+            }
+        };
+    }
+
+    private LocationRequest getLocationRequest() {
+
+        LocationRequest locationRequest = new LocationRequest();
+
+        locationRequest.setInterval(UPDATE_INTERVAL_IN_MS);
+        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MS);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
+        return locationRequest;
+
+    }
+
     @Override
-    public void onStart() {
+    protected void onStart() {
 
         super.onStart();
 
         if (isAccessFineLocationPermissionGranted()) {
-            getLastLocation();
+            checkLocationSettings();
         } else {
             requestPermission();
         }
@@ -99,18 +147,49 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     }
 
     @SuppressLint("MissingPermission")
-    private void getLastLocation() {
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    if (location != null) {
-                        this.lastLocation = location;
-                        Log.d(TAG, "Location: " + location.getLatitude() + "," + location.getLongitude());
-                        getPresenter().getVenuesAround(location.getLatitude(), location.getLongitude());
-                    } else {
-                        Snackbar.make(findViewById(android.R.id.content), R.string.location_disabled, Snackbar.LENGTH_INDEFINITE)
-                                .show();
+    private void checkLocationSettings() {
+
+        LocationSettingsRequest locationSettingsRequest;
+        locationSettingsRequest = getLocationSettingsRequestBuilder().build();
+        SettingsClient settingsClient = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            Log.i(TAG, "All location settings are satisfied. Start location updates...");
+            startLocationUpdates();
+        });
+
+        task.addOnFailureListener(this, e -> {
+            int statusCode = ((ApiException) e).getStatusCode();
+            switch (statusCode) {
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    Log.d(TAG, "Location settings are not satisfied. Attempting to upgrade location settings");
+                    try {
+                        ResolvableApiException rae = (ResolvableApiException) e;
+                        rae.startResolutionForResult(VenuesActivity.this, REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sie) {
+                        Log.d(TAG, "PendingIntent unable to execute request.");
                     }
-                });
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    String errorMessage = "Location settings are inadequate, and cannot be fixed here.";
+                    Log.d(TAG, errorMessage);
+                    Toast.makeText(VenuesActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            }
+
+        });
+
+    }
+
+    private LocationSettingsRequest.Builder getLocationSettingsRequestBuilder() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(getLocationRequest());
+        return builder;
+    }
+
+    @SuppressLint("MissingPermission")
+    private void startLocationUpdates() {
+        fusedLocationClient.requestLocationUpdates(getLocationRequest(), locationCallback, Looper.myLooper());
     }
 
     private void requestPermission() {
@@ -118,12 +197,22 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
                 REQUEST_CODE_ACCESS_FINE_LOCATION);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopLocationUpdates();
+    }
+
+    private void stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback);
+    }
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == REQUEST_CODE_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Log.d(TAG, "Permission granted.");
-                getLastLocation();
+                checkLocationSettings();
             } else {
                 // Permission is denied either temporarily or permanently.
                 Snackbar.make(findViewById(android.R.id.content), R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
@@ -141,6 +230,25 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
         Uri uri = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null);
         intent.setData(uri);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Log.i(TAG, "User made required location settings changes.");
+                    startLocationUpdates();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Log.i(TAG, "Required location settings changes NOT made.");
+                    Snackbar.make(findViewById(android.R.id.content), R.string.location_disabled, Snackbar.LENGTH_INDEFINITE)
+                            .show();
+                    break;
+            }
+        }
+
     }
 
     @NonNull
@@ -164,8 +272,9 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     public void showError(String errorMessage) {
         errorMessageTextView.setText(errorMessage);
         tryAgainButton.setOnClickListener(view -> {
-            if (lastLocation != null)
+            if (lastLocation != null) {
                 getPresenter().getVenuesAround(lastLocation.getLatitude(), lastLocation.getLongitude());
+            }
         });
         tryAgainLayout.setVisibility(View.VISIBLE);
         venuesRecyclerView.setVisibility(View.GONE);
