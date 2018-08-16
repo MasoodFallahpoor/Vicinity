@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -172,6 +173,7 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
         venuesRecyclerView.setVisibility(View.VISIBLE);
 
         venuesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        venuesRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         VenuesAdapter venuesAdapter = new VenuesAdapter(this, venues);
         venuesRecyclerView.setAdapter(venuesAdapter);
 
