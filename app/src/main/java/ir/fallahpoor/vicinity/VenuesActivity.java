@@ -2,6 +2,8 @@ package ir.fallahpoor.vicinity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -18,6 +20,7 @@ import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
 
 public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> implements VenuesView {
 
+    private RecyclerView venuesRecyclerView;
     private RelativeLayout tryAgainLayout;
     private RelativeLayout loadingLayout;
 
@@ -32,6 +35,7 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     }
 
     private void bindViews() {
+        venuesRecyclerView = findViewById(R.id.venues_recycler_view);
         tryAgainLayout = findViewById(R.id.try_again_layout);
         loadingLayout = findViewById(R.id.loading_layout);
     }
@@ -61,6 +65,14 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
     @Override
     public void showVenues(List<VenueViewModel> venues) {
+
+        tryAgainLayout.setVisibility(View.GONE);
+        venuesRecyclerView.setVisibility(View.VISIBLE);
+
+        venuesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        VenuesAdapter venuesAdapter = new VenuesAdapter(this, venues);
+        venuesRecyclerView.setAdapter(venuesAdapter);
+
     }
 
 }
