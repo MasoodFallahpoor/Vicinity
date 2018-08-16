@@ -32,6 +32,9 @@ import ir.fallahpoor.vicinity.UiThread;
 import ir.fallahpoor.vicinity.data.WebServiceFactory;
 import ir.fallahpoor.vicinity.data.executor.JobExecutor;
 import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
+import ir.fallahpoor.vicinity.data.repository.Database;
+import ir.fallahpoor.vicinity.data.repository.cache.VenuesCache;
+import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
 import ir.fallahpoor.vicinity.data.repository.VenuesRepositoryImpl;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
 import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
@@ -139,7 +142,9 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     @NonNull
     @Override
     public VenuesPresenter createPresenter() {
-        VenuesRepository venuesRepository = new VenuesRepositoryImpl(new WebServiceFactory(), new VenuesEntityDataMapper());
+        VenuesDao venuesDao = Database.getDatabase(this).venuesDao();
+        VenuesCache venuesCache = new VenuesCache(venuesDao);
+        VenuesRepository venuesRepository = new VenuesRepositoryImpl(venuesCache, new WebServiceFactory(), new VenuesEntityDataMapper());
         GetVenuesUseCase getVenuesUseCase = new GetVenuesUseCase(venuesRepository, new JobExecutor(), new UiThread());
         return new VenuesPresenterImpl(getVenuesUseCase, new VenuesDataMapper());
     }

@@ -7,6 +7,7 @@ import ir.fallahpoor.vicinity.data.WebServiceFactory;
 import ir.fallahpoor.vicinity.data.entity.VenueDetailsEntity;
 import ir.fallahpoor.vicinity.data.entity.VenuesEntity;
 import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
+import ir.fallahpoor.vicinity.data.repository.cache.VenuesCache;
 import ir.fallahpoor.vicinity.domain.model.Venue;
 import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
 import retrofit2.http.GET;
@@ -19,10 +20,12 @@ public class VenuesRepositoryImpl implements VenuesRepository {
     private static final String SECRET_ID = "RLRAMRXMPEI0K22XTWTNP3ZFJ2REXTVIOV45UCLLCRFBZ12A";
     private static final String VERSION = "20180901";
 
-    private VenuesEntityDataMapper venuesEntityDataMapper;
+    private VenuesCache venuesCache;
     private VenuesWebService venuesWebService;
+    private VenuesEntityDataMapper venuesEntityDataMapper;
 
-    public VenuesRepositoryImpl(WebServiceFactory webServiceFactory, VenuesEntityDataMapper venuesEntityDataMapper) {
+    public VenuesRepositoryImpl(VenuesCache venuesCache, WebServiceFactory webServiceFactory, VenuesEntityDataMapper venuesEntityDataMapper) {
+        this.venuesCache = venuesCache;
         this.venuesWebService = webServiceFactory.createService(VenuesWebService.class);
         this.venuesEntityDataMapper = venuesEntityDataMapper;
     }
@@ -36,8 +39,15 @@ public class VenuesRepositoryImpl implements VenuesRepository {
 
     @Override
     public Single<Venue> getVenueDetails(String id) {
-        return venuesWebService.getVenueDetails(id, CLIENT_ID, SECRET_ID, VERSION)
-                .map(venueDetailsEntity -> venuesEntityDataMapper.transformVenue(venueDetailsEntity.getResponse().getVenue()));
+
+        if (venuesCache.venueExists(id)) {
+            return venuesCache.getVenue(id)
+                    .map(venuesEntityDataMapper::transformVenue);
+        } else {
+            return venuesWebService.getVenueDetails(id, CLIENT_ID, SECRET_ID, VERSION)
+                    .doOnSuccess(venueDetailsEntity -> venuesCache.saveVenue(venueDetailsEntity.getResponse().getVenue()))
+                    .map(venueDetailsEntity -> venuesEntityDataMapper.transformVenue(venueDetailsEntity.getResponse().getVenue()));
+        }
     }
 
     private interface VenuesWebService {
