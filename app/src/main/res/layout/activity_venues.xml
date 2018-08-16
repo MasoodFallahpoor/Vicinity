@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".VenuesActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Hello World!" />
+    <include
+        layout="@layout/try_again_layout"
+        android:visibility="gone" />
+
+    <include layout="@layout/loading_layout" />
 
 </FrameLayout>
