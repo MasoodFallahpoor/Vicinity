@@ -10,6 +10,7 @@ import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
 import ir.fallahpoor.vicinity.domain.model.Venue;
 import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public class VenuesRepositoryImpl implements VenuesRepository {
@@ -45,7 +46,7 @@ public class VenuesRepositoryImpl implements VenuesRepository {
                                            @Query("client_secret") String clientSecret, @Query("v") String version);
 
         @GET("{venueId}")
-        Single<VenueDetailsEntity> getVenueDetails(@Query("venueId") String venueId, @Query("client_id") String clientId,
+        Single<VenueDetailsEntity> getVenueDetails(@Path("venueId") String venueId, @Query("client_id") String clientId,
                                                    @Query("client_secret") String clientSecret, @Query("v") String version);
     }
 
