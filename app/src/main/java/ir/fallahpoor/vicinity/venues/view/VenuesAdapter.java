@@ -1,6 +1,7 @@
 package ir.fallahpoor.vicinity.venues.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,14 +12,17 @@ import android.widget.TextView;
 import java.util.List;
 
 import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.venuedetails.VenueDetailsActivity;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
 public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenueViewHolder> {
 
+    private Context context;
     private LayoutInflater layoutInflater;
     private List<VenueViewModel> places;
 
     VenuesAdapter(Context context, List<VenueViewModel> places) {
+        this.context = context;
         this.places = places;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -32,8 +36,16 @@ public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenueViewH
 
     @Override
     public void onBindViewHolder(@NonNull VenueViewHolder holder, int position) {
-        VenueViewModel place = places.get(position);
-        holder.venueNameTextView.setText(place.getName());
+
+        VenueViewModel venue = places.get(position);
+
+        holder.venueNameTextView.setText(venue.getName());
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, VenueDetailsActivity.class);
+            intent.putExtra(VenueDetailsActivity.KEY_VENUE_ID, venue.getId());
+            context.startActivity(intent);
+        });
+
     }
 
     @Override
