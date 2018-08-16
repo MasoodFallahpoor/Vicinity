@@ -1,11 +1,17 @@
 package ir.fallahpoor.vicinity.data;
 
+import javax.inject.Inject;
+
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WebServiceFactory {
+
+    @Inject
+    public WebServiceFactory() {
+    }
 
     public <S> S createService(Class<S> serviceClass) {
         Retrofit.Builder builder = getRetrofitBuilder();

@@ -2,7 +2,8 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "io.reactivex.rxjava2:rxjava:2.1.9"
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'javax.inject:javax.inject:1'
 }
 
 sourceCompatibility = "8"

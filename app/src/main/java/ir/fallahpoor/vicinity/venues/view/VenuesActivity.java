@@ -26,24 +26,19 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ir.fallahpoor.vicinity.BuildConfig;
 import ir.fallahpoor.vicinity.R;
-import ir.fallahpoor.vicinity.UiThread;
-import ir.fallahpoor.vicinity.data.WebServiceFactory;
-import ir.fallahpoor.vicinity.data.executor.JobExecutor;
-import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
-import ir.fallahpoor.vicinity.data.repository.Database;
-import ir.fallahpoor.vicinity.data.repository.cache.VenuesCache;
-import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
-import ir.fallahpoor.vicinity.data.repository.VenuesRepositoryImpl;
-import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
-import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
+import ir.fallahpoor.vicinity.venues.di.DaggerVenuesComponent;
+import ir.fallahpoor.vicinity.venues.di.VenuesModule;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
-import ir.fallahpoor.vicinity.venues.model.VenuesDataMapper;
 import ir.fallahpoor.vicinity.venues.presenter.VenuesPresenter;
-import ir.fallahpoor.vicinity.venues.presenter.VenuesPresenterImpl;
 
 public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> implements VenuesView {
+
+    @Inject
+    VenuesPresenter venuesPresenter;
 
     private static final int REQUEST_CODE_ACCESS_FINE_LOCATION = 1000;
     private static final String TAG = "@@@@@@";
@@ -59,6 +54,8 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        injectDependencies();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues);
 
@@ -66,6 +63,13 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+    }
+
+    private void injectDependencies() {
+        DaggerVenuesComponent.builder()
+                .venuesModule(new VenuesModule(this))
+                .build()
+                .inject(this);
     }
 
     private void bindViews() {
@@ -142,11 +146,7 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     @NonNull
     @Override
     public VenuesPresenter createPresenter() {
-        VenuesDao venuesDao = Database.getDatabase(this).venuesDao();
-        VenuesCache venuesCache = new VenuesCache(venuesDao);
-        VenuesRepository venuesRepository = new VenuesRepositoryImpl(venuesCache, new WebServiceFactory(), new VenuesEntityDataMapper());
-        GetVenuesUseCase getVenuesUseCase = new GetVenuesUseCase(venuesRepository, new JobExecutor(), new UiThread());
-        return new VenuesPresenterImpl(getVenuesUseCase, new VenuesDataMapper());
+        return venuesPresenter;
     }
 
     @Override

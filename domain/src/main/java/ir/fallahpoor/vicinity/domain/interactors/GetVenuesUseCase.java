@@ -2,6 +2,8 @@ package ir.fallahpoor.vicinity.domain.interactors;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 import ir.fallahpoor.vicinity.domain.executor.PostExecutionThread;
 import ir.fallahpoor.vicinity.domain.executor.ThreadExecutor;
@@ -13,6 +15,7 @@ public class GetVenuesUseCase extends UseCase<List<Venue>, GetVenuesUseCase.Para
 
     private VenuesRepository venuesRepository;
 
+    @Inject
     public GetVenuesUseCase(VenuesRepository venuesRepository,
                             ThreadExecutor threadExecutor,
                             PostExecutionThread postExecutionThread) {

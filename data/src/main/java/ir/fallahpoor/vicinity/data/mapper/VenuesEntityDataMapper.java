@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ir.fallahpoor.vicinity.data.entity.VenueEntity;
 import ir.fallahpoor.vicinity.data.entity.VenuesEntity;
 import ir.fallahpoor.vicinity.domain.model.Venue;
 
 public class VenuesEntityDataMapper {
+
+    @Inject
+    public VenuesEntityDataMapper() {
+    }
 
     public List<Venue> transform(VenuesEntity venuesEntity) {
 

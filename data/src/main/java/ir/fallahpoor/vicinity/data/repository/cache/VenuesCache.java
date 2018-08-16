@@ -1,5 +1,7 @@
 package ir.fallahpoor.vicinity.data.repository.cache;
 
+import javax.inject.Inject;
+
 import io.reactivex.Single;
 import ir.fallahpoor.vicinity.data.entity.VenueEntity;
 import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
@@ -8,6 +10,7 @@ public class VenuesCache {
 
     private VenuesDao venuesDao;
 
+    @Inject
     public VenuesCache(VenuesDao venuesDao) {
         this.venuesDao = venuesDao;
     }

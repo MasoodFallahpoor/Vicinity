@@ -4,9 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import ir.fallahpoor.vicinity.domain.model.Venue;
 
 public class VenuesDataMapper {
+
+    @Inject
+    public VenuesDataMapper() {
+    }
 
     public List<VenueViewModel> transformVenues(List<Venue> venues) {
 
