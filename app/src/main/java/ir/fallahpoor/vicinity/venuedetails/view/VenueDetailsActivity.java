@@ -1,19 +1,17 @@
 package ir.fallahpoor.vicinity.venuedetails.view;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 
 import javax.inject.Inject;
 
 import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.databinding.ActivityVenueDetailsBinding;
 import ir.fallahpoor.vicinity.venuedetails.di.DaggerVenueDetailsComponent;
 import ir.fallahpoor.vicinity.venuedetails.di.VenueDetailsModule;
 import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenter;
@@ -25,11 +23,7 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
     @Inject
     VenueDetailsPresenter venueDetailsPresenter;
-    private LinearLayout contentLayout;
-    private RelativeLayout tryAgainLayout;
-    private RelativeLayout loadingLayout;
-    private TextView errorMessageTextView;
-    private Button tryAgainButton;
+    private ActivityVenueDetailsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +31,9 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
         injectDependencies();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_venue_details);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_venue_details);
 
-        setupViews();
+        setupActionBar();
 
         getPresenter().getVenueDetails(getVenueId());
 
@@ -50,19 +44,6 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
                 .venueDetailsModule(new VenueDetailsModule(this))
                 .build()
                 .inject(this);
-    }
-
-    private void setupViews() {
-        bindViews();
-        setupActionBar();
-    }
-
-    private void bindViews() {
-        contentLayout = findViewById(R.id.content_layout);
-        tryAgainLayout = findViewById(R.id.try_again_layout);
-        loadingLayout = findViewById(R.id.loading_layout);
-        errorMessageTextView = findViewById(R.id.error_message_text_view);
-        tryAgainButton = findViewById(R.id.try_again_button);
     }
 
     private void setupActionBar() {
@@ -85,21 +66,21 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
     @Override
     public void showLoading() {
-        tryAgainLayout.setVisibility(View.GONE);
-        loadingLayout.setVisibility(View.VISIBLE);
+        binding.tryAgain.tryAgainLayout.setVisibility(View.GONE);
+        binding.loading.loadingLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        loadingLayout.setVisibility(View.GONE);
+        binding.loading.loadingLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void showError(String errorMessage) {
-        errorMessageTextView.setText(errorMessage);
-        tryAgainButton.setOnClickListener(view -> getPresenter().getVenueDetails(getVenueId()));
-        tryAgainLayout.setVisibility(View.VISIBLE);
-        contentLayout.setVisibility(View.GONE);
+        binding.tryAgain.errorMessageTextView.setText(errorMessage);
+        binding.tryAgain.tryAgainButton.setOnClickListener(view -> getPresenter().getVenueDetails(getVenueId()));
+        binding.tryAgain.tryAgainLayout.setVisibility(View.VISIBLE);
+        binding.contentLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -107,17 +88,10 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
         setTitle(venue.getName());
 
-        TextView addressTextView = findViewById(R.id.address_text_view);
-        addressTextView.setText(venue.getLocation().getAddress());
+        binding.setVenueViewModel(venue);
 
-        TextView latitudeTextView = findViewById(R.id.latitude_text_view);
-        latitudeTextView.setText(String.valueOf(venue.getLocation().getLatitude()));
-
-        TextView longitudeTextView = findViewById(R.id.longitude_text_view);
-        longitudeTextView.setText(String.valueOf(venue.getLocation().getLongitude()));
-
-        contentLayout.setVisibility(View.VISIBLE);
-        tryAgainLayout.setVisibility(View.GONE);
+        binding.contentLayout.setVisibility(View.VISIBLE);
+        binding.tryAgain.tryAgainLayout.setVisibility(View.GONE);
 
     }
 

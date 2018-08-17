@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/try_again_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/error_message_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/space_medium"
-        android:gravity="center"
-        android:textColor="@android:color/black" />
+    <RelativeLayout
+        android:id="@+id/try_again_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-    <Button
-        android:id="@+id/try_again_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/error_message_text_view"
-        android:layout_centerHorizontal="true"
-        android:text="@string/try_again" />
+        <TextView
+            android:id="@+id/error_message_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="@dimen/space_medium"
+            android:gravity="center"
+            android:textColor="@android:color/black" />
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/try_again_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/error_message_text_view"
+            android:layout_centerHorizontal="true"
+            android:text="@string/try_again" />
+
+    </RelativeLayout>
+
+</layout>
