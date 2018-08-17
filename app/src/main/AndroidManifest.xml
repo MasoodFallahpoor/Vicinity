@@ -3,7 +3,7 @@
     package="ir.fallahpoor.vicinity">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".venuedetails.view.VenueDetailsActivity" />
+        <activity
+            android:name=".venuedetails.view.VenueDetailsActivity"
+            android:parentActivityName=".venues.view.VenuesActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ir.fallahpoor.vicinity.venues.view.VenuesActivity" />
+        </activity>
     </application>
 
 </manifest>

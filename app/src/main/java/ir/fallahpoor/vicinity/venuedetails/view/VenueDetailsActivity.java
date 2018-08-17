@@ -2,6 +2,7 @@ package ir.fallahpoor.vicinity.venuedetails.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -16,7 +17,6 @@ import ir.fallahpoor.vicinity.R;
 import ir.fallahpoor.vicinity.venuedetails.di.DaggerVenueDetailsComponent;
 import ir.fallahpoor.vicinity.venuedetails.di.VenueDetailsModule;
 import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenter;
-import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsView;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
 public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDetailsPresenter> implements VenueDetailsView {
@@ -39,7 +39,7 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venue_details);
 
-        bindViews();
+        setupViews();
 
         getPresenter().getVenueDetails(getVenueId());
 
@@ -52,12 +52,24 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
                 .inject(this);
     }
 
+    private void setupViews() {
+        bindViews();
+        setupActionBar();
+    }
+
     private void bindViews() {
         contentLayout = findViewById(R.id.content_layout);
         tryAgainLayout = findViewById(R.id.try_again_layout);
         loadingLayout = findViewById(R.id.loading_layout);
         errorMessageTextView = findViewById(R.id.error_message_text_view);
         tryAgainButton = findViewById(R.id.try_again_button);
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private String getVenueId() {
@@ -93,11 +105,10 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
     @Override
     public void showPlace(VenueViewModel venue) {
 
+        setTitle(venue.getName());
+
         contentLayout.setVisibility(View.VISIBLE);
         tryAgainLayout.setVisibility(View.GONE);
-
-        TextView placeNameTextView = findViewById(R.id.venue_name_text_view);
-        placeNameTextView.setText(venue.getName());
 
     }
 
