@@ -1,7 +1,5 @@
 package ir.fallahpoor.vicinity.data.repository;
 
-import android.util.Log;
-
 import java.util.List;
 
 import io.reactivex.Single;
