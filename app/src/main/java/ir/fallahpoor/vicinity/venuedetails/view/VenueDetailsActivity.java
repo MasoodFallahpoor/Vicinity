@@ -1,4 +1,4 @@
-package ir.fallahpoor.vicinity.venuedetails;
+package ir.fallahpoor.vicinity.venuedetails.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

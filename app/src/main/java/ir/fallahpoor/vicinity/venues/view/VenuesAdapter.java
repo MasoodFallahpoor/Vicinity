@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import ir.fallahpoor.vicinity.R;
-import ir.fallahpoor.vicinity.venuedetails.VenueDetailsActivity;
+import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsActivity;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
 public class VenuesAdapter extends RecyclerView.Adapter<VenuesAdapter.VenueViewHolder> {

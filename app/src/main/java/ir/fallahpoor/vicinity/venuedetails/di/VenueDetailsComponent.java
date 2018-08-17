@@ -1,7 +1,7 @@
 package ir.fallahpoor.vicinity.venuedetails.di;
 
 import dagger.Component;
-import ir.fallahpoor.vicinity.venuedetails.VenueDetailsActivity;
+import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsActivity;
 
 @Component(modules = VenueDetailsModule.class)
 public interface VenueDetailsComponent {
