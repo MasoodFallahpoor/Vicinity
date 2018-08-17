@@ -1,5 +1,7 @@
 package ir.fallahpoor.vicinity.data.executor;
 
+import android.support.annotation.NonNull;
+
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -16,7 +18,7 @@ public class JobExecutor implements ThreadExecutor {
     }
 
     @Override
-    public void execute(Runnable runnable) {
+    public void execute(@NonNull Runnable runnable) {
         this.threadPoolExecutor.execute(runnable);
     }
 
@@ -24,7 +26,7 @@ public class JobExecutor implements ThreadExecutor {
         private int counter = 0;
 
         @Override
-        public Thread newThread(Runnable runnable) {
+        public Thread newThread(@NonNull Runnable runnable) {
             return new Thread(runnable, "android_" + counter++);
         }
     }
