@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Entity(tableName = "venues")
+@Entity(tableName = "venue")
 public class VenueEntity {
 
     @PrimaryKey

@@ -4,10 +4,11 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import ir.fallahpoor.vicinity.data.entity.Venues;
 import ir.fallahpoor.vicinity.data.entity.VenueEntity;
 import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
 
-@android.arch.persistence.room.Database(entities = {VenueEntity.class}, version = 1)
+@android.arch.persistence.room.Database(entities = {VenueEntity.class, Venues.class}, version = 1)
 public abstract class Database extends RoomDatabase {
 
     private static Database instance;

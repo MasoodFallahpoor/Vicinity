@@ -35,13 +35,13 @@ public class VenuesRepositoryImpl implements VenuesRepository {
 
         String latLng = latitude + "," + longitude;
 
-        if (venuesCache.isEmpty()) {
-            return venuesWebService.getVenuesNear(latLng, CLIENT_ID, SECRET_ID, VERSION)
-                    .doOnSuccess(venuesEntity -> venuesCache.replaceVenues(venuesEntity.getResponse().getVenues()))
-                    .map(venuesEntity -> venuesEntityDataMapper.transform(venuesEntity.getResponse().getVenues()));
-        } else {
+        if (venuesCache.venuesExistFor(latitude, longitude)) {
             return venuesCache.getVenues()
                     .map(venuesEntityDataMapper::transform);
+        } else {
+            return venuesWebService.getVenuesNear(latLng, CLIENT_ID, SECRET_ID, VERSION)
+                    .doOnSuccess(venuesEntity -> venuesCache.replaceVenues(latitude, longitude, venuesEntity.getResponse().getVenues()))
+                    .map(venuesEntity -> venuesEntityDataMapper.transform(venuesEntity.getResponse().getVenues()));
         }
 
     }
