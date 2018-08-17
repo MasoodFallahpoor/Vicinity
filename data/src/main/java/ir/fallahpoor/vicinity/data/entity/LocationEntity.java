@@ -10,25 +10,10 @@ public class LocationEntity {
     private String address;
     @SerializedName("lat")
     @Expose
-    private double lat;
+    private double latitude;
     @SerializedName("lng")
     @Expose
-    private double lng;
-    @SerializedName("distance")
-    @Expose
-    private int distance;
-    @SerializedName("city")
-    @Expose
-    private String city;
-    @SerializedName("state")
-    @Expose
-    private String state;
-    @SerializedName("country")
-    @Expose
-    private String country;
-    @SerializedName("neighborhood")
-    @Expose
-    private String neighborhood;
+    private double longitude;
 
     public String getAddress() {
         return address;
@@ -38,60 +23,20 @@ public class LocationEntity {
         this.address = address;
     }
 
-    public double getLat() {
-        return lat;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public double getLng() {
-        return lng;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
-    }
-
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getNeighborhood() {
-        return neighborhood;
-    }
-
-    public void setNeighborhood(String neighborhood) {
-        this.neighborhood = neighborhood;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 }
