@@ -5,20 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class VenueDetailsEntity {
 
-    @SerializedName("meta")
-    @Expose
-    private Meta meta;
     @SerializedName("response")
     @Expose
     private Response response;
-
-    public Meta getMeta() {
-        return meta;
-    }
-
-    public void setMeta(Meta meta) {
-        this.meta = meta;
-    }
 
     public Response getResponse() {
         return response;
