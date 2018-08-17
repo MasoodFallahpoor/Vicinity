@@ -1,5 +1,6 @@
 package ir.fallahpoor.vicinity.data.entity;
 
+import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
@@ -18,6 +19,10 @@ public class VenueEntity {
     @SerializedName("name")
     @Expose
     private String name;
+    @Embedded
+    @SerializedName("location")
+    @Expose
+    private LocationEntity location;
 
     public String getId() {
         return id;
@@ -33,6 +38,14 @@ public class VenueEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocationEntity getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationEntity location) {
+        this.location = location;
     }
 
 }

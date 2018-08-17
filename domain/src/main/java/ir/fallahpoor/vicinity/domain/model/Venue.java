@@ -4,6 +4,7 @@ public class Venue {
 
     private String id;
     private String name;
+    private Location location;
 
     public String getId() {
         return id;
@@ -19,6 +20,14 @@ public class Venue {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
 }

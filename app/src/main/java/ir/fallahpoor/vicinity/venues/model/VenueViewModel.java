@@ -4,6 +4,7 @@ public class VenueViewModel {
 
     private String id;
     private String name;
+    private LocationViewModel location;
 
     public String getId() {
         return id;
@@ -19,6 +20,14 @@ public class VenueViewModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocationViewModel getLocation() {
+        return location;
+    }
+
+    public void setLocation(LocationViewModel location) {
+        this.location = location;
     }
 
 }

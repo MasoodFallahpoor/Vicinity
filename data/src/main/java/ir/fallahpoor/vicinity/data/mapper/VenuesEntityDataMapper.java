@@ -6,7 +6,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ir.fallahpoor.vicinity.data.entity.LocationEntity;
 import ir.fallahpoor.vicinity.data.entity.VenueEntity;
+import ir.fallahpoor.vicinity.domain.model.Location;
 import ir.fallahpoor.vicinity.domain.model.Venue;
 
 public class VenuesEntityDataMapper {
@@ -39,9 +41,24 @@ public class VenuesEntityDataMapper {
         if (venueEntity != null) {
             venue.setId(venueEntity.getId());
             venue.setName(venueEntity.getName());
+            venue.setLocation(transformLocation(venueEntity.getLocation()));
         }
 
         return venue;
+
+    }
+
+    private Location transformLocation(LocationEntity locationEntity) {
+
+        Location location = new Location();
+
+        if (locationEntity != null) {
+            location.setAddress(locationEntity.getAddress());
+            location.setLatitude(locationEntity.getLatitude());
+            location.setLongitude(locationEntity.getLongitude());
+        }
+
+        return location;
 
     }
 
