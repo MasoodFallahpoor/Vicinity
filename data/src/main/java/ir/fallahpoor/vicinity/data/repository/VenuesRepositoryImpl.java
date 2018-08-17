@@ -1,5 +1,7 @@
 package ir.fallahpoor.vicinity.data.repository;
 
+import android.util.Log;
+
 import java.util.List;
 
 import io.reactivex.Single;
@@ -32,9 +34,18 @@ public class VenuesRepositoryImpl implements VenuesRepository {
 
     @Override
     public Single<List<Venue>> getVenuesAround(double latitude, double longitude) {
+
         String latLng = latitude + "," + longitude;
-        return venuesWebService.getPlacesNear(latLng, CLIENT_ID, SECRET_ID, VERSION)
-                .map(venuesEntityDataMapper::transform);
+
+        if (venuesCache.isEmpty()) {
+            return venuesWebService.getVenuesNear(latLng, CLIENT_ID, SECRET_ID, VERSION)
+                    .doOnSuccess(venuesEntity -> venuesCache.replaceVenues(venuesEntity.getResponse().getVenues()))
+                    .map(venuesEntity -> venuesEntityDataMapper.transform(venuesEntity.getResponse().getVenues()));
+        } else {
+            return venuesCache.getVenues()
+                    .map(venuesEntityDataMapper::transform);
+        }
+
     }
 
     @Override
@@ -52,7 +63,7 @@ public class VenuesRepositoryImpl implements VenuesRepository {
 
     private interface VenuesWebService {
         @GET("search")
-        Single<VenuesEntity> getPlacesNear(@Query("ll") String latLng, @Query("client_id") String clientId,
+        Single<VenuesEntity> getVenuesNear(@Query("ll") String latLng, @Query("client_id") String clientId,
                                            @Query("client_secret") String clientSecret, @Query("v") String version);
 
         @GET("{venueId}")

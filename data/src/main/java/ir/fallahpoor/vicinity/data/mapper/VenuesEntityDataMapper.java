@@ -7,7 +7,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import ir.fallahpoor.vicinity.data.entity.VenueEntity;
-import ir.fallahpoor.vicinity.data.entity.VenuesEntity;
 import ir.fallahpoor.vicinity.domain.model.Venue;
 
 public class VenuesEntityDataMapper {
@@ -16,13 +15,13 @@ public class VenuesEntityDataMapper {
     public VenuesEntityDataMapper() {
     }
 
-    public List<Venue> transform(VenuesEntity venuesEntity) {
+    public List<Venue> transform(List<VenueEntity> venueEntities) {
 
         List<Venue> venues;
 
-        if (venuesEntity != null) {
+        if (venueEntities != null) {
             venues = new ArrayList<>();
-            for (VenueEntity venue : venuesEntity.getResponse().getVenues()) {
+            for (VenueEntity venue : venueEntities) {
                 venues.add(transformVenue(venue));
             }
         } else {

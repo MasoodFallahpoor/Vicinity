@@ -1,5 +1,7 @@
 package ir.fallahpoor.vicinity.data.repository.cache;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.reactivex.Single;
@@ -15,6 +17,10 @@ public class VenuesCache {
         this.venuesDao = venuesDao;
     }
 
+    public boolean isEmpty() {
+        return (venuesDao.getNumberOfVenues() == 0);
+    }
+
     public boolean venueExists(String id) {
         return (venuesDao.venueExists(id) > 0);
     }
@@ -23,8 +29,21 @@ public class VenuesCache {
         venuesDao.saveVenue(venueEntity);
     }
 
+    public void replaceVenues(List<VenueEntity> venues) {
+        deleteVenues();
+        venuesDao.saveVenues(venues);
+    }
+
     public Single<VenueEntity> getVenue(String id) {
         return venuesDao.getVenue(id);
+    }
+
+    public Single<List<VenueEntity>> getVenues() {
+        return venuesDao.getVenues();
+    }
+
+    private void deleteVenues() {
+        venuesDao.deleteVenues();
     }
 
 }
