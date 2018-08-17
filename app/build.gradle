@@ -13,6 +13,9 @@ android {
         versionCode = (versionMajor * 100) + (versionMinor * 10) + versionPatch
         versionName "$versionMajor.$versionMinor.$versionPatch"
     }
+    dataBinding {
+        enabled = true
+    }
     buildTypes {
         release {
             minifyEnabled false
