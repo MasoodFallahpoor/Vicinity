@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,12 +17,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -44,6 +41,7 @@ import javax.inject.Inject;
 
 import ir.fallahpoor.vicinity.BuildConfig;
 import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.databinding.ActivityVenuesBinding;
 import ir.fallahpoor.vicinity.venues.di.DaggerVenuesComponent;
 import ir.fallahpoor.vicinity.venues.di.VenuesModule;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
@@ -60,11 +58,7 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
     private static final long UPDATE_INTERVAL_IN_MS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MS = 5000;
 
-    private RecyclerView venuesRecyclerView;
-    private RelativeLayout tryAgainLayout;
-    private RelativeLayout loadingLayout;
-    private TextView errorMessageTextView;
-    private Button tryAgainButton;
+    private ActivityVenuesBinding binding;
 
     private FusedLocationProviderClient fusedLocationClient;
     private Location lastLocation;
@@ -76,9 +70,7 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
         injectDependencies();
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_venues);
-
-        bindViews();
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_venues);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -91,14 +83,6 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
                 .venuesModule(new VenuesModule(this))
                 .build()
                 .inject(this);
-    }
-
-    private void bindViews() {
-        venuesRecyclerView = findViewById(R.id.venues_recycler_view);
-        tryAgainLayout = findViewById(R.id.try_again_layout);
-        loadingLayout = findViewById(R.id.loading_layout);
-        errorMessageTextView = findViewById(R.id.error_message_text_view);
-        tryAgainButton = findViewById(R.id.try_again_button);
     }
 
     private void setupLocationCallback() {
@@ -259,37 +243,37 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
     @Override
     public void showLoading() {
-        tryAgainLayout.setVisibility(View.GONE);
-        loadingLayout.setVisibility(View.VISIBLE);
+        binding.tryAgain.tryAgainLayout.setVisibility(View.GONE);
+        binding.loading.loadingLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        loadingLayout.setVisibility(View.GONE);
+        binding.loading.loadingLayout.setVisibility(View.GONE);
     }
 
     @Override
     public void showError(String errorMessage) {
-        errorMessageTextView.setText(errorMessage);
-        tryAgainButton.setOnClickListener(view -> {
+        binding.tryAgain.errorMessageTextView.setText(errorMessage);
+        binding.tryAgain.tryAgainButton.setOnClickListener(view -> {
             if (lastLocation != null) {
                 getPresenter().getVenuesAround(lastLocation.getLatitude(), lastLocation.getLongitude());
             }
         });
-        tryAgainLayout.setVisibility(View.VISIBLE);
-        venuesRecyclerView.setVisibility(View.GONE);
+        binding.tryAgain.tryAgainLayout.setVisibility(View.VISIBLE);
+        binding.venuesRecyclerView.setVisibility(View.GONE);
     }
 
     @Override
     public void showVenues(List<VenueViewModel> venues) {
 
-        tryAgainLayout.setVisibility(View.GONE);
-        venuesRecyclerView.setVisibility(View.VISIBLE);
+        binding.tryAgain.tryAgainLayout.setVisibility(View.GONE);
+        binding.venuesRecyclerView.setVisibility(View.VISIBLE);
 
-        venuesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        venuesRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        binding.venuesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.venuesRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         VenuesAdapter venuesAdapter = new VenuesAdapter(this, venues);
-        venuesRecyclerView.setAdapter(venuesAdapter);
+        binding.venuesRecyclerView.setAdapter(venuesAdapter);
 
     }
 
