@@ -25,9 +25,9 @@ public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView
 
         disposable = getVenueDetailsUseCase.execute(GetVenueDetailsUseCase.Params.forVenue(id))
                 .subscribe(
-                        places -> ifViewAttached(view -> {
+                        venue -> ifViewAttached(view -> {
                             view.hideLoading();
-                            view.showPlace(venueDetailsDataMapper.transform(places));
+                            view.showPlace(venueDetailsDataMapper.transform(venue));
                         }),
                         throwable -> ifViewAttached(view -> {
                             view.hideLoading();
