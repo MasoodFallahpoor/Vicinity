@@ -107,6 +107,15 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
         setTitle(venue.getName());
 
+        TextView addressTextView = findViewById(R.id.address_text_view);
+        addressTextView.setText(venue.getLocation().getAddress());
+
+        TextView latitudeTextView = findViewById(R.id.latitude_text_view);
+        latitudeTextView.setText(String.valueOf(venue.getLocation().getLatitude()));
+
+        TextView longitudeTextView = findViewById(R.id.longitude_text_view);
+        longitudeTextView.setText(String.valueOf(venue.getLocation().getLongitude()));
+
         contentLayout.setVisibility(View.VISIBLE);
         tryAgainLayout.setVisibility(View.GONE);
 
