@@ -32,7 +32,7 @@ public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView
                 .subscribe(
                         venue -> ifViewAttached(view -> {
                             view.hideLoading();
-                            view.showPlace(venueDetailsDataMapper.transform(venue));
+                            view.showVenue(venueDetailsDataMapper.transform(venue));
                         }),
                         throwable -> ifViewAttached(view -> {
                             Error error = exceptionHandler.parseException(throwable);

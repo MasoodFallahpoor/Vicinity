@@ -84,7 +84,7 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
     }
 
     @Override
-    public void showPlace(VenueViewModel venue) {
+    public void showVenue(VenueViewModel venue) {
 
         setTitle(venue.getName());
 

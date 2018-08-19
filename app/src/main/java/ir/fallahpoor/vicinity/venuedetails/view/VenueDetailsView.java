@@ -12,6 +12,6 @@ public interface VenueDetailsView extends MvpView {
 
     void showError(String errorMessage);
 
-    void showPlace(VenueViewModel venue);
+    void showVenue(VenueViewModel venue);
 
 }
