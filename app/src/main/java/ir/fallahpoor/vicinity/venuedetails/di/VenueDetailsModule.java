@@ -5,6 +5,7 @@ import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
 import ir.fallahpoor.vicinity.UiThread;
+import ir.fallahpoor.vicinity.common.ExceptionHandler;
 import ir.fallahpoor.vicinity.data.WebServiceFactory;
 import ir.fallahpoor.vicinity.data.executor.JobExecutor;
 import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
@@ -30,8 +31,15 @@ public class VenueDetailsModule {
     }
 
     @Provides
-    VenueDetailsPresenter provideVenueDetailsPresenter(GetVenueDetailsUseCase getVenuesUseCase, VenueDetailsDataMapper venueDetailsDataMapper) {
-        return new VenueDetailsPresenterImpl(getVenuesUseCase, venueDetailsDataMapper);
+    Context provideContext() {
+        return context;
+    }
+
+    @Provides
+    VenueDetailsPresenter provideVenueDetailsPresenter(GetVenueDetailsUseCase getVenuesUseCase,
+                                                       VenueDetailsDataMapper venueDetailsDataMapper,
+                                                       ExceptionHandler exceptionHandler) {
+        return new VenueDetailsPresenterImpl(getVenuesUseCase, venueDetailsDataMapper, exceptionHandler);
     }
 
     @Provides

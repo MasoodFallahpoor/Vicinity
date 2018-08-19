@@ -3,6 +3,8 @@ package ir.fallahpoor.vicinity.venuedetails.presenter;
 import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
 
 import io.reactivex.disposables.Disposable;
+import ir.fallahpoor.vicinity.common.Error;
+import ir.fallahpoor.vicinity.common.ExceptionHandler;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenueDetailsUseCase;
 import ir.fallahpoor.vicinity.venuedetails.model.VenueDetailsDataMapper;
 import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsView;
@@ -11,11 +13,14 @@ public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView
 
     private GetVenueDetailsUseCase getVenueDetailsUseCase;
     private VenueDetailsDataMapper venueDetailsDataMapper;
+    private ExceptionHandler exceptionHandler;
     private Disposable disposable;
 
-    public VenueDetailsPresenterImpl(GetVenueDetailsUseCase getVenueDetailsUseCase, VenueDetailsDataMapper venueDetailsDataMapper) {
+    public VenueDetailsPresenterImpl(GetVenueDetailsUseCase getVenueDetailsUseCase, VenueDetailsDataMapper venueDetailsDataMapper,
+                                     ExceptionHandler exceptionHandler) {
         this.getVenueDetailsUseCase = getVenueDetailsUseCase;
         this.venueDetailsDataMapper = venueDetailsDataMapper;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @Override
@@ -30,8 +35,9 @@ public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView
                             view.showPlace(venueDetailsDataMapper.transform(venue));
                         }),
                         throwable -> ifViewAttached(view -> {
+                            Error error = exceptionHandler.parseException(throwable);
                             view.hideLoading();
-                            view.showError(throwable.getMessage());
+                            view.showError(error.getMessage());
                         }));
 
     }
