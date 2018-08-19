@@ -11,9 +11,9 @@ import com.hannesdorfmann.mosby3.mvp.MvpActivity;
 import javax.inject.Inject;
 
 import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.app.App;
 import ir.fallahpoor.vicinity.databinding.ActivityVenueDetailsBinding;
 import ir.fallahpoor.vicinity.venuedetails.di.DaggerVenueDetailsComponent;
-import ir.fallahpoor.vicinity.venuedetails.di.VenueDetailsModule;
 import ir.fallahpoor.vicinity.venuedetails.presenter.VenueDetailsPresenter;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 
@@ -41,7 +41,7 @@ public class VenueDetailsActivity extends MvpActivity<VenueDetailsView, VenueDet
 
     private void injectDependencies() {
         DaggerVenueDetailsComponent.builder()
-                .venueDetailsModule(new VenueDetailsModule(this))
+                .appComponent(((App) getApplication()).getAppComponent())
                 .build()
                 .inject(this);
     }

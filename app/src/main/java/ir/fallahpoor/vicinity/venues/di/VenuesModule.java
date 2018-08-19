@@ -4,16 +4,12 @@ import android.content.Context;
 
 import dagger.Module;
 import dagger.Provides;
-import ir.fallahpoor.vicinity.UiThread;
 import ir.fallahpoor.vicinity.common.ExceptionHandler;
-import ir.fallahpoor.vicinity.data.executor.JobExecutor;
 import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
 import ir.fallahpoor.vicinity.data.repository.Database;
 import ir.fallahpoor.vicinity.data.repository.VenuesRepositoryImpl;
 import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
 import ir.fallahpoor.vicinity.data.repository.datasource.VenuesDataSourceFactory;
-import ir.fallahpoor.vicinity.domain.executor.PostExecutionThread;
-import ir.fallahpoor.vicinity.domain.executor.ThreadExecutor;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
 import ir.fallahpoor.vicinity.domain.repository.VenuesRepository;
 import ir.fallahpoor.vicinity.venues.model.VenuesDataMapper;
@@ -23,17 +19,6 @@ import ir.fallahpoor.vicinity.venues.presenter.VenuesPresenterImpl;
 @Module
 public class VenuesModule {
 
-    private Context context;
-
-    public VenuesModule(Context context) {
-        this.context = context;
-    }
-
-    @Provides
-    Context provideContext() {
-        return context;
-    }
-
     @Provides
     VenuesPresenter provideVenuesPresenter(GetVenuesUseCase getVenuesUseCase, VenuesDataMapper venuesDataMapper,
                                            ExceptionHandler exceptionHandler) {
@@ -41,22 +26,13 @@ public class VenuesModule {
     }
 
     @Provides
-    VenuesRepository provideVenuesRepository(VenuesDataSourceFactory venuesDataSourceFactory, VenuesEntityDataMapper venuesEntityDataMapper) {
+    VenuesRepository provideVenuesRepository(VenuesDataSourceFactory venuesDataSourceFactory,
+                                             VenuesEntityDataMapper venuesEntityDataMapper) {
         return new VenuesRepositoryImpl(venuesDataSourceFactory, venuesEntityDataMapper);
     }
 
     @Provides
-    ThreadExecutor provideThreadExecutor() {
-        return new JobExecutor();
-    }
-
-    @Provides
-    PostExecutionThread providePostExecutionThread() {
-        return new UiThread();
-    }
-
-    @Provides
-    VenuesDao provideVenuesDao() {
+    VenuesDao provideVenuesDao(Context context) {
         return Database.getDatabase(context).venuesDao();
     }
 

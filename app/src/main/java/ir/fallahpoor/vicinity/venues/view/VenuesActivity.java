@@ -41,9 +41,9 @@ import javax.inject.Inject;
 
 import ir.fallahpoor.vicinity.BuildConfig;
 import ir.fallahpoor.vicinity.R;
+import ir.fallahpoor.vicinity.app.App;
 import ir.fallahpoor.vicinity.databinding.ActivityVenuesBinding;
 import ir.fallahpoor.vicinity.venues.di.DaggerVenuesComponent;
-import ir.fallahpoor.vicinity.venues.di.VenuesModule;
 import ir.fallahpoor.vicinity.venues.model.VenueViewModel;
 import ir.fallahpoor.vicinity.venues.presenter.VenuesPresenter;
 
@@ -80,7 +80,7 @@ public class VenuesActivity extends MvpActivity<VenuesView, VenuesPresenter> imp
 
     private void injectDependencies() {
         DaggerVenuesComponent.builder()
-                .venuesModule(new VenuesModule(this))
+                .appComponent(((App) getApplication()).getAppComponent())
                 .build()
                 .inject(this);
     }
