@@ -6,13 +6,12 @@ import dagger.Module;
 import dagger.Provides;
 import ir.fallahpoor.vicinity.UiThread;
 import ir.fallahpoor.vicinity.common.ExceptionHandler;
-import ir.fallahpoor.vicinity.data.WebServiceFactory;
 import ir.fallahpoor.vicinity.data.executor.JobExecutor;
 import ir.fallahpoor.vicinity.data.mapper.VenuesEntityDataMapper;
 import ir.fallahpoor.vicinity.data.repository.Database;
 import ir.fallahpoor.vicinity.data.repository.VenuesRepositoryImpl;
-import ir.fallahpoor.vicinity.data.repository.cache.VenuesCache;
 import ir.fallahpoor.vicinity.data.repository.dao.VenuesDao;
+import ir.fallahpoor.vicinity.data.repository.datasource.VenuesDataSourceFactory;
 import ir.fallahpoor.vicinity.domain.executor.PostExecutionThread;
 import ir.fallahpoor.vicinity.domain.executor.ThreadExecutor;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
@@ -42,9 +41,8 @@ public class VenuesModule {
     }
 
     @Provides
-    VenuesRepository provideVenuesRepository(VenuesCache venuesCache, WebServiceFactory webServiceFactory,
-                                             VenuesEntityDataMapper venuesEntityDataMapper) {
-        return new VenuesRepositoryImpl(venuesCache, webServiceFactory, venuesEntityDataMapper);
+    VenuesRepository provideVenuesRepository(VenuesDataSourceFactory venuesDataSourceFactory, VenuesEntityDataMapper venuesEntityDataMapper) {
+        return new VenuesRepositoryImpl(venuesDataSourceFactory, venuesEntityDataMapper);
     }
 
     @Provides
