@@ -1,21 +1,19 @@
 package ir.fallahpoor.vicinity.venues.presenter;
 
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-
 import io.reactivex.disposables.Disposable;
+import ir.fallahpoor.vicinity.BaseMvpPresenter;
 import ir.fallahpoor.vicinity.common.Error;
 import ir.fallahpoor.vicinity.common.ExceptionHandler;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenuesUseCase;
 import ir.fallahpoor.vicinity.venues.model.VenuesDataMapper;
 import ir.fallahpoor.vicinity.venues.view.VenuesView;
 
-public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements VenuesPresenter {
+public class VenuesPresenterImpl extends BaseMvpPresenter<VenuesView> implements VenuesPresenter {
 
     private static final int MAX_DISTANCE_TO_UPDATE_VENUES = 100;
     private GetVenuesUseCase getVenuesUseCase;
     private VenuesDataMapper venuesDataMapper;
     private ExceptionHandler exceptionHandler;
-    private Disposable disposable;
     private double prevLatitude;
     private double prevLongitude;
 
@@ -36,7 +34,7 @@ public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements
 
         ifViewAttached(VenuesView::showLoading);
 
-        disposable = getVenuesUseCase.execute(GetVenuesUseCase.Params.forLocation(latitude, longitude))
+        Disposable d = getVenuesUseCase.execute(GetVenuesUseCase.Params.forLocation(latitude, longitude))
                 .subscribe(
                         venues -> {
                             prevLatitude = latitude;
@@ -52,6 +50,7 @@ public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements
                             view.showError(error.getMessage());
                         })
                 );
+        addDisposable(d);
 
     }
 
@@ -71,14 +70,6 @@ public class VenuesPresenterImpl extends MvpBasePresenter<VenuesView> implements
 
         return Math.sqrt(distance);
 
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
     }
 
 }

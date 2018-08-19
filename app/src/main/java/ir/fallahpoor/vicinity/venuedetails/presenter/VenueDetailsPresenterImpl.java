@@ -1,20 +1,18 @@
 package ir.fallahpoor.vicinity.venuedetails.presenter;
 
-import com.hannesdorfmann.mosby3.mvp.MvpBasePresenter;
-
 import io.reactivex.disposables.Disposable;
+import ir.fallahpoor.vicinity.BaseMvpPresenter;
 import ir.fallahpoor.vicinity.common.Error;
 import ir.fallahpoor.vicinity.common.ExceptionHandler;
 import ir.fallahpoor.vicinity.domain.interactors.GetVenueDetailsUseCase;
 import ir.fallahpoor.vicinity.venuedetails.model.VenueDetailsDataMapper;
 import ir.fallahpoor.vicinity.venuedetails.view.VenueDetailsView;
 
-public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView> implements VenueDetailsPresenter {
+public class VenueDetailsPresenterImpl extends BaseMvpPresenter<VenueDetailsView> implements VenueDetailsPresenter {
 
     private GetVenueDetailsUseCase getVenueDetailsUseCase;
     private VenueDetailsDataMapper venueDetailsDataMapper;
     private ExceptionHandler exceptionHandler;
-    private Disposable disposable;
 
     public VenueDetailsPresenterImpl(GetVenueDetailsUseCase getVenueDetailsUseCase, VenueDetailsDataMapper venueDetailsDataMapper,
                                      ExceptionHandler exceptionHandler) {
@@ -28,7 +26,7 @@ public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView
 
         ifViewAttached(VenueDetailsView::showLoading);
 
-        disposable = getVenueDetailsUseCase.execute(GetVenueDetailsUseCase.Params.forVenue(id))
+        Disposable d = getVenueDetailsUseCase.execute(GetVenueDetailsUseCase.Params.forVenue(id))
                 .subscribe(
                         venue -> ifViewAttached(view -> {
                             view.hideLoading();
@@ -39,15 +37,8 @@ public class VenueDetailsPresenterImpl extends MvpBasePresenter<VenueDetailsView
                             view.hideLoading();
                             view.showError(error.getMessage());
                         }));
+        addDisposable(d);
 
-    }
-
-    @Override
-    public void destroy() {
-        super.destroy();
-        if (disposable != null && !disposable.isDisposed()) {
-            disposable.dispose();
-        }
     }
 
 }
