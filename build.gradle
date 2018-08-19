@@ -27,6 +27,11 @@ task clean(type: Delete) {
 }
 
 ext {
+    supportLibVersion = '27.1.1'
+    roomVersion = '1.1.1'
+    retrofitVersion = '2.4.0'
+    rxJavaVersion = '2.1.9'
+    injectVersion = '1'
     myCompileSdkVersion = 27
     myMinSdkVersion = 14
     myTargetSdkVersion = 27
