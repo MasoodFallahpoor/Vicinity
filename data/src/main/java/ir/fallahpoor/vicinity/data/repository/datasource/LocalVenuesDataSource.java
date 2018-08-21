@@ -17,7 +17,6 @@ public class LocalVenuesDataSource implements VenuesDataSource {
         this.venuesCache = venuesCache;
     }
 
-
     @Override
     public Single<List<VenueEntity>> getVenues(double latitude, double longitude) {
         return venuesCache.getVenues();
