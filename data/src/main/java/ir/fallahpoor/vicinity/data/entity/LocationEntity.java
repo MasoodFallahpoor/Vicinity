@@ -1,18 +1,14 @@
 package ir.fallahpoor.vicinity.data.entity;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class LocationEntity {
 
     @SerializedName("address")
-    @Expose
     private String address;
     @SerializedName("lat")
-    @Expose
     private double latitude;
     @SerializedName("lng")
-    @Expose
     private double longitude;
 
     public String getAddress() {

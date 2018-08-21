@@ -1,12 +1,10 @@
 package ir.fallahpoor.vicinity.data.entity;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class VenueDetailsEntity {
 
     @SerializedName("response")
-    @Expose
     private Response response;
 
     public Response getResponse() {
@@ -20,7 +18,6 @@ public class VenueDetailsEntity {
     public class Response {
 
         @SerializedName("venue")
-        @Expose
         private VenueEntity venue;
 
         public VenueEntity getVenue() {

@@ -5,7 +5,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Entity(tableName = "venue")
@@ -14,14 +13,11 @@ public class VenueEntity {
     @PrimaryKey
     @NonNull
     @SerializedName("id")
-    @Expose
     private String id;
     @SerializedName("name")
-    @Expose
     private String name;
     @Embedded
     @SerializedName("location")
-    @Expose
     private LocationEntity location;
 
     public String getId() {

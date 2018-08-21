@@ -1,6 +1,5 @@
 package ir.fallahpoor.vicinity.data.entity;
 
-import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.List;
 public class VenuesEntity {
 
     @SerializedName("response")
-    @Expose
     private Response response;
 
     public Response getResponse() {
@@ -22,7 +20,6 @@ public class VenuesEntity {
     public static class Response {
 
         @SerializedName("venues")
-        @Expose
         private List<VenueEntity> venues;
 
         public List<VenueEntity> getVenues() {
